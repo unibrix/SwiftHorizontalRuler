@@ -1,3 +1,4 @@
+import AudioToolbox
 import SwiftUI
 import UIKit
 
@@ -62,14 +63,22 @@ public struct HorizontalRuler: UIViewRepresentable {
 
         func handleValueChange(_ newValue: Double) {
             parent.value = newValue
-            fireHapticIfNeeded(for: newValue)
+            fireFeedbackIfNeeded(for: newValue)
         }
 
-        // MARK: - Haptics
+        // MARK: - Feedback (haptics + sound)
 
-        private func fireHapticIfNeeded(for newValue: Double) {
-            guard parent.config.hapticStyle != .none else { return }
-            guard abs(newValue - lastHapticValue) >= parent.config.minorIncrement * 0.9 else { return }
+        /// System tick sound ID matching `UIPickerView` behavior.
+        private static let tickSoundID: SystemSoundID = 1104
+
+        private func fireFeedbackIfNeeded(for newValue: Double) {
+            let config = parent.config
+            guard config.hapticStyle != .none || config.tickSound else { return }
+            guard abs(newValue - lastHapticValue) >= config.minorIncrement * 0.9 else { return }
+
+            if config.tickSound {
+                AudioServicesPlaySystemSound(Self.tickSoundID)
+            }
 
             switch feedbackGenerator {
             case let gen as UISelectionFeedbackGenerator:

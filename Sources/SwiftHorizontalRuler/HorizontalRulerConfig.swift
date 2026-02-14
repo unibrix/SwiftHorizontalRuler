@@ -44,6 +44,8 @@ public struct HorizontalRulerConfig {
     public let indicatorColor: UIColor
     /// Haptic feedback style. Defaults to `.selection`.
     public let hapticStyle: RulerHapticStyle
+    /// Play an audible tick sound on each step (like `UIPickerView`). Defaults to `true`.
+    public let tickSound: Bool
 
     /// Total number of ticks for this configuration.
     var tickCount: Int {
@@ -63,6 +65,7 @@ public struct HorizontalRulerConfig {
         tickSpacing: CGFloat = 6,
         indicatorColor: UIColor = .tintColor,
         hapticStyle: RulerHapticStyle = .selection,
+        tickSound: Bool = true,
         labelFormatter: @escaping (Double) -> String = { String(format: "%.0f", $0) }
     ) {
         precondition(minValue < maxValue, "minValue (\(minValue)) must be less than maxValue (\(maxValue))")
@@ -78,6 +81,7 @@ public struct HorizontalRulerConfig {
         self.tickSpacing = tickSpacing
         self.indicatorColor = indicatorColor
         self.hapticStyle = hapticStyle
+        self.tickSound = tickSound
         self.labelFormatter = labelFormatter
     }
 
